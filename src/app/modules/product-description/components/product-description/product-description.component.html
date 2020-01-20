@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="row mt-5" *ngIf="product">
+        <div class="col-12 col-md-4 text-center">
+            <img [src]="'../../../../../'+product?.photoUrl" alt="foto-producto" width="350px">
+        </div>
+        <div class="col-12 col-md-8">
+            <div class="row">
+                <div class="col-12">
+                    <h3>{{product.name}}</h3>
+                    <h4>{{product.price | currency: 'MXN'}}</h4>
+                    <mat-form-field>
+                        <mat-label>Cantidad</mat-label>
+                        <mat-select name="quantityInp" [(ngModel)]="quantity">
+                            <mat-option *ngFor="let quantity of product.quantities" [value]="quantity">
+                                {{quantity}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+                    <button mat-raised-button color="primary" (click)="addShoppingCart()">
+                        Agregar al carrito
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 mt-5">
+            <h5>Descripción</h5>
+            <hr>
+            <p>{{product.description}}</p>
+        </div>
+    </div>
+</div>

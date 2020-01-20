@@ -1,0 +1,139 @@
+@import '~@angular/material/theming';
+@include mat-core();
+$challenge-billpocket-primary: mat-palette($mat-light-blue);;
+$challenge-billpocket-accent: mat-palette($mat-pink, A200, A100, A400);
+$challenge-billpocket-warn: mat-palette($mat-red);
+
+$challenge-billpocket-theme: mat-light-theme($challenge-billpocket-primary, $challenge-billpocket-accent, $challenge-billpocket-warn);
+
+@include angular-material-theme($challenge-billpocket-theme);
+
+$color-primary: map-get($mat-light-blue, 300);
+$color-primary-200: map-get($mat-light-blue, 200);
+
+.bg-light-blue {
+    background-color: $color-primary !important;
+    color: white !important;
+}
+
+.text-light-blue {
+    color: $color-primary !important;
+}
+
+.bg-light-blue a {
+    color: white !important;
+}
+
+.bg-light-blue a:hover,
+.bg-light-blue a:focus {
+    color: white !important;
+    filter: brightness(0.5);
+}
+
+html, body { height: 100%; }
+
+body { 
+    margin: 0; 
+    font-family: Roboto, "Helvetica Neue", sans-serif; 
+}
+
+#page-container {
+  position: relative;
+  min-height: 100vh;
+  padding-top: 5rem;
+}
+
+#content-wrap {
+  padding-bottom: 15.5rem;
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.fa-1_5x {
+    font-size: 1.5em;
+}
+mat-form-field{
+    width: 100%;
+}
+
+.visa-color{
+    color: #1a1f71;
+}
+
+.mastercard-color{
+    color: #1a1f71;
+}
+
+.amex-color{
+    color: #002663;
+}
+
+.zoom {
+    transition: transform .2s;
+    cursor: pointer;
+}
+
+.zoom:hover {
+    -ms-transform: scale(1.05); /* IE 9 */
+    -webkit-transform: scale(1.05); /* Safari 3-8 */
+    transform: scale(1.05); 
+}
+
+footer {
+    bottom: 0px !important;
+    width: 100%;
+}
+
+.info-empresa .section-2 p {
+    color: #6c757d !important;
+    font-size: 0.8rem;
+}
+
+.info-empresa .section-1 p {
+    color: #6c757d !important;
+}
+
+.info-empresa h5 {
+    color: $color-primary !important;
+}
+
+.contact-social {
+    text-align: center !important;
+}
+
+.contact-social a {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.contact span {
+    font-size: 1.2rem;
+}
+.contact a {
+    font-size: 1.1rem;
+}
+
+.contact div {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.btn-light-blue {
+    background-color: $color-primary !important;
+    color: white !important;
+}
+
+.btn-light-blue:hover,
+.btn-light-blue:focus {
+    background-color: $color-primary-200 !important;
+}
+
+.cdk-overlay-container{
+    z-index: 10001 !important;
+}

@@ -1,0 +1,327 @@
+<div class="container mt-5">
+    <div class="row" *ngIf="shoppingCart.totalItems">
+        <div class="col text-center">
+            <h3>Finalizar compra</h3>
+            <p>Estas a unos pasos de que los productos sean tuyos.</p>
+        </div>
+    </div>
+    <div class="row" *ngIf="shoppingCart.totalItems">
+        <div class="col-md-4 order-md-2 mb-4">
+            <h4 class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-muted">Carrito</span>
+                <span class="badge badge-secondary badge-pill">
+                    {{ shoppingCart.shoppingCartList.length }}
+                </span>
+            </h4>
+            <ul class="list-group mb-3  shadow">
+                <li class="list-group-item d-flex justify-content-between lh-condensed"
+                    *ngFor="let item of shoppingCart.shoppingCartList">
+                    <div>
+                        <h6 class="my-0">{{item.product.name}}</h6>
+                        <mat-form-field>
+                            <mat-label>Cantidad</mat-label>
+                            <mat-select name="quantityInp" [(ngModel)]="item.quantity"
+                                (ngModelChange)="shoppingCart.changeQuantity(item)">
+                                <mat-option [value]="0"> 0 </mat-option>
+                                <mat-option *ngFor="let quantity of item.product.quantities" [value]="quantity">
+                                    {{quantity}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <span class="text-muted">{{ item.total | currency: 'MXN'}}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Total:</span>
+                    <strong>{{ shoppingCart.paymentTotal | currency: 'MXN' }}</strong>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-8 order-md-1">
+            <mat-vertical-stepper class="shadow rounded p-md-4" [linear]="true" #stepper>
+                <mat-step [stepControl]="formPersonalData">
+                    <form #formPersonalData="ngForm">
+                        <ng-template matStepLabel>
+                            <h5 class="m-0">Datos personales</h5>
+                        </ng-template>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <mat-form-field>
+                                    <mat-label for="firstName">Nombre(s)</mat-label>
+                                    <input matInput type="text" name="firstName"
+                                        [(ngModel)]="order.personalData.firstName" maxlength="50" required>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <mat-form-field>
+                                    <mat-label for="lastName">Apellidos(s)</mat-label>
+                                    <input matInput type="text" name="lastName"
+                                        [(ngModel)]="order.personalData.lastName" maxlength="50" required>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <mat-form-field>
+                                    <mat-label for="phone">Celular</mat-label>
+                                    <input matInput type="tel" name="cellphone"
+                                        [(ngModel)]="order.personalData.cellphone" maxlength="10" required>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <mat-form-field>
+                                    <mat-label for="phone">Teléfono (10 dígitos)</mat-label>
+                                    <input matInput type="tel" name="homePhone"
+                                        [(ngModel)]="order.personalData.homephone" maxlength="10">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <mat-form-field>
+                                    <mat-label for="email">Correo</mat-label>
+                                    <input matInput type="email" name="email" #email="ngModel"
+                                        [(ngModel)]="order.personalData.email" required maxlength="100"
+                                        [pattern]="emailPattern">
+                                    <mat-error *ngIf="email.hasError('pattern')">
+                                        Ingresa un email <strong>válido</strong>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div>
+                            <button mat-button matStepperNext>Siguiente</button>
+                        </div>
+                    </form>
+                </mat-step>
+                <mat-step [stepControl]="formShippingAddress">
+                    <form #formShippingAddress="ngForm">
+                        <ng-template matStepLabel>
+                            <h5 class="m-0">Datos de envío</h5>
+                        </ng-template>
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <mat-form-field>
+                                    <mat-label for="street">Calle</mat-label>
+                                    <input matInput type="text" name="street" [(ngModel)]="order.shippingAdress.street"
+                                        maxlength="32" required>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <mat-form-field>
+                                    <mat-label for="numExt">Número exterior</mat-label>
+                                    <input matInput type="number" name="numExt"
+                                        [(ngModel)]="order.shippingAdress.extNum" required>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <mat-form-field>
+                                    <mat-label for="numInt">Número interior</mat-label>
+                                    <input matInput type="text" name="numInt" [(ngModel)]="order.shippingAdress.intNum"
+                                        maxlength="10">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <mat-form-field>
+                                    <mat-label for="zipCode">Código Postal</mat-label>
+                                    <input matInput type="text" name="zipCode"
+                                        [(ngModel)]="order.shippingAdress.zipCode" #zipCode="ngModel"
+                                        (change)="zipCodeChange()" minlength="5" maxlength="5" required>
+                                    <mat-hint align="end">
+                                        {{ zipCode.value?.length ? zipCode.value?.length : 0 }} / 5
+                                    </mat-hint>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <mat-form-field>
+                                    <mat-label for="suburb">Colonia</mat-label>
+                                    <mat-select name="suburb" [(ngModel)]="order.shippingAdress.suburb" required>
+                                        <mat-option [value]="null"> Seleccionar colonia </mat-option>
+                                        <mat-option *ngFor="let suburb of suburbs" [value]="suburb">
+                                            {{ suburb }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <mat-form-field>
+                                    <mat-label for="city">Ciudad</mat-label>
+                                    <input matInput type="text" name="city" [(ngModel)]="order.shippingAdress.city"
+                                        maxlength="64" required disabled>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <mat-form-field>
+                                    <mat-label for="estado">Estado</mat-label>
+                                    <input matInput type="text" name="estado" [(ngModel)]="order.shippingAdress.state"
+                                        maxlength="32" required disabled>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <mat-form-field>
+                                    <mat-label for="reference">Referencias</mat-label>
+                                    <input matInput type="text" name="reference"
+                                        [(ngModel)]="order.shippingAdress.reference" maxlength="128" required>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div>
+                            <button mat-button matStepperPrevious>Atrás</button>
+                            <button mat-button matStepperNext>Siguiente</button>
+                        </div>
+                    </form>
+                </mat-step>
+                <mat-step [stepControl]="formPaymentMethod">
+                    <form #formPaymentMethod="ngForm">
+                        <ng-template matStepLabel>
+                            <h5 class="m-0">Método de pago</h5>
+                        </ng-template>
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label>Selecciona método de pago</label>
+                                <mat-radio-group color="primary" class="d-flex flex-column" name="paymentMethodInp"
+                                    [(ngModel)]="order.paymentMethodType" aria-label="Selecciona una opción"
+                                    (change)="paymentMethodChange()" required>
+                                    <mat-radio-button value="card">
+                                        <i class="fas fa-credit-card fa-1_5x"></i> Tarjeta de crédito o débito
+                                    </mat-radio-button>
+                                    <mat-radio-button value="oxxo">
+                                        <img src="../../../../../assets/images/oxxo-icon.png" alt="oxxo-logo"
+                                            width="27px" height="24px">
+                                        Pago en OXXO
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <div *ngIf="order.isPaymentCard()">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <mat-form-field>
+                                                <mat-label for="numberCard">Número tarjeta</mat-label>
+                                                <input matInput type="text" name="numberCard" #numberCard="ngModel"
+                                                    [(ngModel)]="order.paymentMethod.debitOrCredit.number"
+                                                    minlength="15" maxlength="21" required>
+                                                <i matSuffix [ngClass]="order.getCreditCardIcon()"></i>
+                                                <mat-error *ngIf="numberCard.hasError('minlength')">
+                                                    El número de tarjeta tiene que tener mínimo<strong>15
+                                                        carácteres.</strong>
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col">
+                                            <mat-form-field>
+                                                <mat-label for="numberCard">Expiración</mat-label>
+                                                <input matInput type="text" name="expiration" placeholder="MM/AA"
+                                                    [(ngModel)]="order.paymentMethod.debitOrCredit.expiration"
+                                                    mask="mM/yY" [patterns]="customExpDatePattern" required>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col">
+                                            <mat-form-field>
+                                                <mat-label for="cvv">Código de seguridad</mat-label>
+                                                <input matInput type="password" name="cvv"
+                                                    [(ngModel)]="order.paymentMethod.debitOrCredit.cvv" minlength="3"
+                                                    maxlength="4" required>
+                                                <mat-hint>
+                                                    Últimos 3 o 4 dígitos al reverso de la tarjeta.
+                                                </mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-12">
+                                            <mat-form-field>
+                                                <mat-label for="cardHolderName">Nombre</mat-label>
+                                                <input matInput type="text" name="cardHolderName"
+                                                    [(ngModel)]="order.paymentMethod.debitOrCredit.cardHolderName"
+                                                    maxlength="21" required>
+                                                <mat-hint>
+                                                    Nombre impreso en la tarjeta.
+                                                </mat-hint>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button mat-button matStepperPrevious>Atrás</button>
+                            <button mat-button matStepperNext>Siguiente</button>
+                        </div>
+                    </form>
+                </mat-step>
+                <mat-step>
+                    <ng-template matStepLabel>
+                        <h5 class="m-0">Finalizar pedido</h5>
+                    </ng-template>
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <address class="col-12">
+                                <strong>Datos de envío</strong>
+                                <ul class="list-unstyled ml-4">
+                                    <li>
+                                        <strong>
+                                            {{ order.personalData.fullName }}
+                                        </strong>
+                                    </li>
+                                    <li>
+                                        {{ order.shippingAdress.streetAndNum }}
+                                    </li>
+                                    <li>
+                                        {{ order.shippingAdress.suburb }}.
+                                    </li>
+                                    <li>
+                                        {{ order.shippingAdress.cityAndState }}
+                                    </li>
+                                    <li>
+                                        {{ order.shippingAdress.reference }}
+                                    </li>
+                                </ul>
+                            </address>
+                            <div class="col-12">
+                                <strong>Método de pago</strong>
+                                <ul class="list-unstyled" *ngIf="order.isPaymentCard()">
+                                    <li>
+                                        <strong>
+                                            <i [ngClass]="order.getCreditCardIcon()"></i>
+                                            {{ order.getCardTermination() }}
+                                        </strong>
+                                    </li>
+                                    <li>
+                                        Nombre: {{ order.paymentMethod.debitOrCredit.cardHolderName }}
+                                    </li>
+                                </ul>
+                                <div class="row" *ngIf="order.isPaymentOxxo()">
+                                    <div class="col-12 pl-5">
+                                        <p>
+                                            Referencia: {{ this.order.paymentMethod.oxxo.reference }}.
+                                        </p>
+                                    </div>
+                                    <div class="col-12 text-center pl-4">
+                                        <img src="../../../../../assets/images/oxxo-icon.png" alt="oxxo-logo">
+                                        <ngx-barcode #barcodeOxxo [bc-value]="this.order.paymentMethod.oxxo.reference"
+                                            bc-element-type="canvas" [bc-display-value]="true">
+                                        </ngx-barcode>
+                                        <small>
+                                            Pagar en sucursal monto exacto de:
+                                            {{ shoppingCart.paymentTotal | currency: 'MXN' }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 text-center mt-5">
+                        <button class="btn btn-primary btn-block" (click)="finishOrder()">
+                            <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+                            Pagar {{ shoppingCart.paymentTotal | currency: 'MXN' }}
+                        </button>
+                    </div>
+                </mat-step>
+            </mat-vertical-stepper>
+        </div>
+    </div>
+    <div class="row" *ngIf="!shoppingCart.totalItems">
+        <div class="col-12 text-center p-5">
+            <h2>Aún no tienes productos en tu carrito</h2>
+            <i class="fa fa-shopping-cart fa-10x"></i><br><br>
+            <button class="btn btn-light-blue btn-lg" routerLink="/app">
+                Agregar productos
+            </button>
+        </div>
+    </div>
+</div>

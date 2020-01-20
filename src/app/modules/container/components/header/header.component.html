@@ -1,0 +1,18 @@
+<header class="fixed-top bg-white">
+    <nav class="navbar pt-3 pb-3 mat-elevation-z4">
+        <div class="container">
+            <a class="navbar-brand">
+                <img routerLink="/app" src="../../../../../assets/images/Billpocket_logo.png" alt="billpocket logo"
+                    height="40">
+            </a>
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-light-blue" [matBadge]="shoppingCartService.totalItems"
+                        matBadgeColor="accent" routerLink="/app/shopping-cart/check-out">
+                        Comprar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
